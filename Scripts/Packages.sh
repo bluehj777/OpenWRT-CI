@@ -70,7 +70,7 @@ UPDATE_PACKAGE "qmodem" "FUjr/QModem" "main"
 UPDATE_PACKAGE "viking" "VIKINGYFY/packages" "main" "" "luci-app-timewol luci-app-wolplus"
 UPDATE_PACKAGE "vnt" "lmq8267/luci-app-vnt" "main"
 
-UPDATE_PACKAGE "luci-app-advancedplus" "bluehj777/openwrt_pkgs" "main" "pkg"
+#UPDATE_PACKAGE "luci-app-advancedplus" "bluehj777/openwrt_pkgs" "main" "pkg"
 UPDATE_PACKAGE "luci-app-onliner" "bluehj777/openwrt_pkgs" "main" "pkg"
 
 #更新软件包版本
