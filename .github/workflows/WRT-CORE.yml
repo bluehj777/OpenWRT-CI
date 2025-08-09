@@ -184,7 +184,44 @@ jobs:
         run: |
           cd ./wrt/
 
-          make -j1 || make -j1 V=s
+          echo "=== Starting compilation ==="
+          free -h
+          df -h /mnt
+          echo "=========================="
+
+          # 编译固件，如果失败则显示详细错误信息并停止
+          if ! make -j1 V=s 2>&1 | tee build.log; then
+            echo ""
+            echo "=== COMPILATION FAILED ==="
+            
+            # 查找具体的错误信息
+            echo "=== Last 50 lines of build log ==="
+            tail -50 build.log
+            
+            echo ""
+            echo "=== Package installation errors ==="
+            grep -A10 -B5 "Error\|error\|ERROR" build.log | tail -30
+            
+            echo ""
+            echo "=== Failed package details ==="
+            grep -E "Installing.*failed|Error installing|make.*Error" build.log || echo "No specific package errors found"
+            
+            echo ""
+            echo "=== APK/Package manager errors ==="
+            grep -E "apk|package.*error|dependency" build.log | tail -10 || echo "No package manager errors found"
+            
+            echo ""
+            echo "=== System resources ==="
+            free -h
+            df -h /mnt
+            
+            echo ""
+            echo "=== STOPPING HERE TO ANALYZE ERRORS ==="
+            echo "Check the above output to identify the 3 failed packages"
+            exit 1
+          fi
+          
+          echo "=== COMPILATION COMPLETED SUCCESSFULLY ==="
 
       - name: Machine Information
         run: |
