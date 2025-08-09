@@ -189,35 +189,39 @@ jobs:
           df -h /mnt
           echo "=========================="
 
-          # 编译固件，如果失败则显示详细错误信息并停止
+          # 编译固件，正确检测失败状态
           if ! make -j1 V=s 2>&1 | tee build.log; then
             echo ""
             echo "=== COMPILATION FAILED ==="
             
-            # 查找具体的错误信息
-            echo "=== Last 50 lines of build log ==="
+            # 显示最后的错误信息
+            echo "=== Last 50 lines ==="
             tail -50 build.log
             
             echo ""
+            echo "=== All errors found ==="
+            grep -n -i "error" build.log | tail -20
+            
+            echo ""
             echo "=== Package installation errors ==="
-            grep -A10 -B5 "Error\|error\|ERROR" build.log | tail -30
+            grep -A5 -B5 "Installing.*failed\|Error installing\|errors;" build.log
             
             echo ""
-            echo "=== Failed package details ==="
-            grep -E "Installing.*failed|Error installing|make.*Error" build.log || echo "No specific package errors found"
+            echo "=== Looking for the 3 failed packages ==="
+            # 查找"3 errors"附近的内容
+            grep -B20 -A10 "3 errors" build.log || echo "Could not find '3 errors' context"
             
             echo ""
-            echo "=== APK/Package manager errors ==="
-            grep -E "apk|package.*error|dependency" build.log | tail -10 || echo "No package manager errors found"
+            echo "=== APK/Package manager specific errors ==="
+            grep -i "apk.*error\|package.*error\|dependency.*error" build.log || echo "No APK errors found"
             
             echo ""
-            echo "=== System resources ==="
+            echo "=== System status ==="
             free -h
             df -h /mnt
             
             echo ""
-            echo "=== STOPPING HERE TO ANALYZE ERRORS ==="
-            echo "Check the above output to identify the 3 failed packages"
+            echo "=== COMPILATION STOPPED - NEED TO FIX THE 3 FAILED PACKAGES ==="
             exit 1
           fi
           
