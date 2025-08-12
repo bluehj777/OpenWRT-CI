@@ -71,13 +71,6 @@ if [ -f "$TS_FILE" ]; then
 	cd $PKG_PATH && echo "tailscale has been fixed!"
 fi
 
-#修复Socat配置文件冲突
-SOCAT_FILE=$(find ../feeds/packages/ -maxdepth 3 -type f -wholename "*/socat/Makefile")
-if [ -f "$SOCAT_FILE" ]; then
-	sed -i '/\/files/d' $SOCAT_FILE
-	cd $PKG_PATH && echo "socat has been fixed!"
-fi
-
 #修复ddns日志无法滚动问题
 DDNS_OVERVIEW_FILE=$(find ./ ../feeds/luci/ -type f -path "*/luci-app-ddns/htdocs/luci-static/resources/view/ddns/overview.js")
 if [ -f "$DDNS_OVERVIEW_FILE" ]; then
