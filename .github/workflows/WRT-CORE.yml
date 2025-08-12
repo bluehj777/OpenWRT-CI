@@ -92,7 +92,7 @@ jobs:
           echo "WRT_KVER=none" >> $GITHUB_ENV
           echo "WRT_LIST=none" >> $GITHUB_ENV
           echo "WRT_MODS=none" >> $GITHUB_ENV
-          
+
       - name: Clone Code
         run: |
           git clone --depth=1 --single-branch --branch $WRT_BRANCH $WRT_REPO ./wrt/
@@ -273,7 +273,7 @@ jobs:
           body: |
             这是ROCKCHIP平台Ariaboard Photonicat 光影猫固件包！
             已集成QWRT模组管理(来自https://github.com/FUjr/QModem)
-
+            
             源码：${{env.WRT_REPO}}
             分支：${{env.WRT_BRANCH}}
             提交：${{env.WRT_HASH}}
